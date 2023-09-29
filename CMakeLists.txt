@@ -39,7 +39,7 @@ set(ASYNC_SERIAL_SRC
 set(ASYNC_SERIAL_HEADER
         include/ntrip_client_ros/AsyncSerial.h)
 
-add_executable(ntrip_client_ros_exe
+add_executable(ntrip_client_exe
         ${NTRIP_CLIENT_ROS_SRC}
         ${NTRIP_CLIENT_ROS_HEADER}
         ${NTRIP_LIB_SRC}
@@ -48,14 +48,14 @@ add_executable(ntrip_client_ros_exe
         ${ASYNC_SERIAL_HEADER}
         )
 
-ament_target_dependencies(ntrip_client_ros_exe
+ament_target_dependencies(ntrip_client_exe
         rclcpp
         mavros_msgs
         nmea_msgs
         )
 
 install(TARGETS
-        ntrip_client_ros_exe
+		ntrip_client_exe
         DESTINATION lib/${PROJECT_NAME})
 
 install(DIRECTORY launch

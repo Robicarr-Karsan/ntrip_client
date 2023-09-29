@@ -8,15 +8,15 @@ def generate_launch_description():
     ld = LaunchDescription()
 
     param = os.path.join(
-        get_package_share_directory('ntrip_client_ros'),
+        get_package_share_directory('ntrip_client'),
         'config',
-        'ntrip_client_ros.param.yaml'
+        'ntrip_client.param.yaml'
     )
 
     node=Node(
-        package = 'ntrip_client_ros',
-        name = 'ntrip_client_ros',
-        executable = 'ntrip_client_ros_exe',
+        package = 'ntrip_client',
+        name = 'ntrip_client',
+        executable = 'ntrip_client_exe',
         parameters = [param]
     )
 
