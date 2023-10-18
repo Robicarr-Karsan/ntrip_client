@@ -113,7 +113,7 @@ NtripClientRos::NtripClientRos():Node("ntrip_client_ros"),
   }
 
   int i = 2000;
-  while(i>0){
+  while(i>0 && rclcpp::ok()){
     if(NtripClientStart()){
       RCLCPP_INFO(this->get_logger(), "\033[1;32m NTRIP client connected \033[0m");
       break;
