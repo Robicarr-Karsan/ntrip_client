@@ -2,12 +2,12 @@
   ros__parameters:
     #NTRIP Params
     ntrip_ip: "212.156.70.42"
-    ntrip_user_name: "..........."
-    ntrip_password: "......"
+    ntrip_user_name: "K073432501"
+    ntrip_password: "GR3g4"
     ntrip_mount_point: "VRSRTCM31"
     ntrip_port: 2101
-    ntrip_location_lat: 41.018893949
-    ntrip_location_lon: 28.890924848
+    ntrip_location_lat: 40.1740978
+    ntrip_location_lon: 28.7735008
 
     #Serial Port Params
     publish_port_rtcm_active: false
