@@ -2,7 +2,7 @@
 // Created by farukbaykara on 04.05.2023.
 //
 
-#include "../include/ntrip_client_ros/ntrip_client_ros.hpp"
+#include "ntrip_client_ros/ntrip_client_ros.hpp"
 
 using namespace std;
 using namespace chrono_literals;
@@ -84,8 +84,8 @@ NtripClientRos::NtripClientRos():Node("ntrip_client_ros"),
                                    ParameterValue{false},
                                    ParameterDescriptor{})
                                .get<bool>()},
-  m_set_ntrip_location_active{this->declare_parameter(
-                                   "set_ntrip_location_active",
+  m_set_ntrip_location_from_yaml_{this->declare_parameter(
+                                   "set_ntrip_location_from_yaml",
                                    ParameterValue{false},
                                    ParameterDescriptor{})
                                .get<bool>()}
@@ -96,7 +96,7 @@ NtripClientRos::NtripClientRos():Node("ntrip_client_ros"),
 
   pub_rtcm_ = create_publisher<mavros_msgs::msg::RTCM>(m_rtcm_topic_,rclcpp::QoS{1},PubAllocT{});
 
-  if(m_set_ntrip_location_active){
+  if(m_set_ntrip_location_from_yaml_ && !is_connected){
     ConnectNtripClient();
   }
   else{
@@ -134,6 +134,7 @@ void NtripClientRos::ConnectNtripClient(){
   while(i>0 && rclcpp::ok()){
     if(NtripClientStart()){
       RCLCPP_INFO(this->get_logger(), "\033[1;32m NTRIP client connected \033[0m");
+      is_connected=true;
       break;
     }
     else{
@@ -148,7 +149,14 @@ void NtripClientRos::ConnectNtripClient(){
 void NtripClientRos::NavSatCB(const sensor_msgs::msg::NavSatFix::SharedPtr msg){
   m_ntrip_location_lat = msg->latitude;
   m_ntrip_location_lon = msg->longitude;
-  ConnectNtripClient();
+  if(!is_connected){
+    RCLCPP_INFO(this->get_logger(), "\033[1;34m NavSatFix Topic:\033[0m %s",m_nav_sat_fix_topic);
+    RCLCPP_INFO(this->get_logger(), "\033[1;34m NTRIP Location Lat:\033[0m %f",m_ntrip_location_lat);
+    RCLCPP_INFO(this->get_logger(), "\033[1;34m NTRIP Location Lon:\033[0m %f",m_ntrip_location_lon);
+    ConnectNtripClient();
+  }
+  if(is_connected)
+    sub_nav_sat_fix_.reset();
 }
 
 bool NtripClientRos::NtripClientStart()
@@ -212,8 +220,8 @@ void NtripClientRos::ReadParameters()
   RCLCPP_INFO(this->get_logger(), "\033[1;34m NTRIP Password:\033[0m %s",m_ntrip_password_.c_str());
   RCLCPP_INFO(this->get_logger(), "\033[1;34m NTRIP MountPoint:\033[0m %s",m_ntrip_mountpoint_.c_str());
   RCLCPP_INFO(this->get_logger(), "\033[1;34m NTRIP Port:\033[0m %d",m_ntrip_port_);
-  RCLCPP_INFO(this->get_logger(), "\033[1;34m Set NTRIP Location Manually:\033[0m %B",m_set_ntrip_location_active);
-  if(m_set_ntrip_location_active){
+  RCLCPP_INFO(this->get_logger(), "\033[1;34m Set NTRIP Location Manually:\033[0m %B",m_set_ntrip_location_from_yaml_);
+  if(m_set_ntrip_location_from_yaml_){
     RCLCPP_INFO(this->get_logger(), "\033[1;34m NavSatFix Topic:\033[0m %s",m_nav_sat_fix_topic);
     RCLCPP_INFO(this->get_logger(), "\033[1;34m NTRIP Location Lat:\033[0m %f",m_ntrip_location_lat);
     RCLCPP_INFO(this->get_logger(), "\033[1;34m NTRIP Location Lon:\033[0m %f",m_ntrip_location_lon);

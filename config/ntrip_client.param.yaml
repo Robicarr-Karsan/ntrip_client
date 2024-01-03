@@ -8,8 +8,8 @@
     ntrip_port: 2101
 
     #NTRIP Location Params
-    set_ntrip_location_active: false
-    nav_sat_fix_topic: "/sensing/gnss/clap/ros/nav_sat_fix" #if set_ntrip_location_active false
+    set_ntrip_location_from_yaml: false
+    nav_sat_fix_topic: "/sensing/gnss/clap/ros/gps_nav_sat_fix" #if set_ntrip_location_from_yaml false
     ntrip_location_lat: 40.1740978  #if set_ntrip_location_active true
     ntrip_location_lon: 28.7735008  #if set_ntrip_location_active true
 

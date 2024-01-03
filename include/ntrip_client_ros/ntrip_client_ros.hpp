@@ -59,8 +59,9 @@ private:
   std::string m_rtcm_topic_;
   bool m_publish_port_rtcm_active_;
   
-  bool m_set_ntrip_location_active;
+  bool m_set_ntrip_location_from_yaml_;
   std::string m_nav_sat_fix_topic;
+  bool is_connected{false};
 
 
   CallbackAsyncSerial m_serial_boost_;
